@@ -2,25 +2,33 @@ using UnityEngine;
 
 public class DoorController : MonoBehaviour
 {
-    // Mühendislik kuralı: Kodun kapıyı hareket ettirebilmesi için kapının ana gövdesine ihtiyacı var
+    // kapının ana gövdesine ihtiyacı var
     public GameObject doorObject; 
-    public float openHeight = 3.5f; // Kapının yukarı doğru kaç metre kayacağı
-    private bool isDoorOpened = false; // Kapının durumunu hafızada tutan State (Durum) değişkeni
+    public float openHeight = 3.5f; // kapının yukarı doğru kaç metre kayacağı
+    private bool isDoorOpened = false; // kapının durumunu hafızada tutan değişkeni
 
-    // Unity'nin hazır fizik sensör fonksiyonu (İçeriden bir nesne geçtiğinde otomatik tetiklenir)
+    // kasanın açılıp açılmadığını buradan takip ediyorum
+    [HideInInspector] public bool isSafeOpened = false; 
+
+    // Unity hazır fizik sensör fonksiyonu
     private void OnTriggerEnter(Collider other)
     {
-        // Gelen nesnenin kimlik kartında (Tag) "Key" yazıyor mu ve kapı zaten açılmamış mı?
-        if (other.CompareTag("Key") && !isDoorOpened)
+        // hem tag "Key" olcak, hem kapı açılmamış olcak, hem de şifre doğru girilmiş olcak
+        if (other.CompareTag("Key") && !isDoorOpened && isSafeOpened)
         {
-            isDoorOpened = true; // Durumu güncelle (Kapının tekrar tekrar tetiklenmesini engeller)
+            isDoorOpened = true; // durumu güncelle 
             OpenTheDoor();
+        }
+        // şifreyi girmeden anahtarı kapıya değdirirlerse uyar
+        else if (other.CompareTag("Key") && !isSafeOpened)
+        {
+            Debug.Log("Kasa açılmadan bu kilit/anahtar çalışmaz!");
         }
     }
 
     private void OpenTheDoor()
     {
-        // Kapıyı odanın tavanına doğru, y ekseninde yukarı kaydırıyoruz
+        // kapıyı açma efekti veriyoruz yukarı kayıyor
         doorObject.transform.position += new Vector3(0, openHeight, 0);
         Debug.Log("Sistem Doğrulandı: Kapı Açıldı!");
     }

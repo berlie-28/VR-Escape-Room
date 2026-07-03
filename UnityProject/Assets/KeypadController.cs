@@ -11,6 +11,9 @@ public class KeypadController : MonoBehaviour
     // açılacak olan kapak
     public GameObject safeLid; 
 
+    // kapı koduna erişmek için buraya ekledik
+    public DoorController doorControl; 
+
     // sayıyı ekleme yeri
     public void AddDigit(string digit)
     {
@@ -33,6 +36,12 @@ public class KeypadController : MonoBehaviour
             Debug.Log("ŞİFRE DOĞRU!");
             // kapağı yana doğru döndür aç
             safeLid.transform.localRotation = Quaternion.Euler(0, 90, 0); 
+            
+            // kapı koduna kasanın açıldığını haber veriyoz
+            if (doorControl != null)
+            {
+                doorControl.isSafeOpened = true;
+            }
         }
         else
         {

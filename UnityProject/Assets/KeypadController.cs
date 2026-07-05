@@ -34,8 +34,8 @@ public class KeypadController : MonoBehaviour
         if (currentInput == correctPassword)
         {
             Debug.Log("ŞİFRE DOĞRU!");
-            // kapağı yana doğru döndür aç
-            safeLid.transform.localRotation = Quaternion.Euler(0, 90, 0); 
+            // kapağı yok ediyoruz
+            safeLid.SetActive(false);
             
             // kapı koduna kasanın açıldığını haber veriyoz
             if (doorControl != null)

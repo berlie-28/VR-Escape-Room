@@ -1,18 +1,32 @@
 using UnityEngine;
+using System.Collections;
 
 public class KeypadController : MonoBehaviour
 {
     // açma şifresi
-    public string correctPassword = "132"; 
-    
+    public string correctPassword = "132";
+
     // basılan tuşları burada tutuyoz
-    private string currentInput = ""; 
+    private string currentInput = "";
 
     // açılacak olan kapak
-    public GameObject safeLid; 
+    public GameObject safeLid;
 
     // kapı koduna erişmek için buraya ekledik
-    public DoorController doorControl; 
+    public DoorController doorControl;
+
+    // renk değişimi için 
+    public MeshRenderer panelRenderer;
+
+    // panelin başlangıç rengini saklıyoruz
+    private Color originalColor;
+
+    void Start()
+    {
+        // açılışta orijinal rengi kaydet
+        if (panelRenderer != null)
+            originalColor = panelRenderer.material.color;
+    }
 
     // sayıyı ekleme yeri
     public void AddDigit(string digit)
@@ -30,24 +44,35 @@ public class KeypadController : MonoBehaviour
 
     void CheckPassword()
     {
-        // şifre doğruysa
         if (currentInput == correctPassword)
         {
             Debug.Log("ŞİFRE DOĞRU!");
-            // kapağı yok ediyoruz
             safeLid.SetActive(false);
-            
-            // kapı koduna kasanın açıldığını haber veriyoz
+
             if (doorControl != null)
-            {
                 doorControl.isSafeOpened = true;
-            }
+
+            // paneli yeşil yak
+            StartCoroutine(FlashColor(Color.green));
         }
         else
         {
             Debug.Log("YANLIŞ ŞİFRE!");
-            // yanlışsa sıfırla baştan yazsın
-            currentInput = ""; 
+            currentInput = "";
+
+            // paneli kırmızı yak
+            StartCoroutine(FlashColor(Color.red));
         }
+    }
+
+    // paneli verilen renge boyayıp sonra orijinaline döndür
+    private IEnumerator FlashColor(Color flashColor)
+    {
+        panelRenderer.material.color = flashColor;
+
+        // 0.5 saniye bekle
+        yield return new WaitForSeconds(0.5f);
+
+        panelRenderer.material.color = originalColor;
     }
 }

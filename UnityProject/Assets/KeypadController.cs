@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class KeypadController : MonoBehaviour
 {
@@ -21,27 +22,46 @@ public class KeypadController : MonoBehaviour
     // panelin başlangıç rengini saklıyoruz
     private Color originalColor;
 
+    // bastıkça sayıları gösteren ekran
+    public TMP_Text displayText;
+
     void Start()
     {
         // açılışta orijinal rengi kaydet
         if (panelRenderer != null)
             originalColor = panelRenderer.material.color;
+
+        // ekranı başta boş göster
+        if (displayText != null)
+            displayText.text = "";
     }
 
     // sayıyı ekleme yeri
     public void AddDigit(string digit)
     {
-        // yeni sayıyı sona ekle (1 yanına 2 gelince 12 olsun diye)
+        // yeni sayıyı sona ekle
         currentInput += digit;
+
+        // ekranda göster
+        if (displayText != null)
+            displayText.text = currentInput;
+
         Debug.Log("Şu anki durum: " + currentInput);
 
         // 3 basamak olduysa kontrol et
         if (currentInput.Length >= 3)
         {
-            CheckPassword();
+            StartCoroutine(CheckPasswordWithDelay());
         }
     }
 
+    // son sayıyı ekranda göster, biraz bekle sonra kontrol et
+    private IEnumerator CheckPasswordWithDelay()
+    {
+        yield return new WaitForSeconds(0.4f);
+        CheckPassword();
+    }
+    
     void CheckPassword()
     {
         if (currentInput == correctPassword)
@@ -58,11 +78,15 @@ public class KeypadController : MonoBehaviour
         else
         {
             Debug.Log("YANLIŞ ŞİFRE!");
-            currentInput = "";
 
             // paneli kırmızı yak
             StartCoroutine(FlashColor(Color.red));
         }
+
+        // ekranı ve girişi sıfırla
+        currentInput = "";
+        if (displayText != null)
+            displayText.text = "";
     }
 
     // paneli verilen renge boyayıp sonra orijinaline döndür

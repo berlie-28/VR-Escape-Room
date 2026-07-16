@@ -52,13 +52,6 @@ public class EditorTestCamera : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 Debug.Log("Lazer şuna çarptı: " + hit.transform.name);
-                // Çarptığım şey renk değiştiren top mu?
-                ColorChanger changer = hit.transform.GetComponent<ColorChanger>();
-                if (changer != null)
-                {
-                    changer.ChangeToRandomColor();
-                }
-
                 // Çarptığım şey şifre butonu mu?
                 KeypadButton button = hit.transform.GetComponent<KeypadButton>();
                 if (button != null)

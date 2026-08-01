@@ -6,6 +6,12 @@ public class ColorChanger : MonoBehaviour
 {
     private MeshRenderer targetRenderer;
 
+    // code note'un text bileşeni, animasyon için lazım
+    private TMP_Text codeNoteText;
+
+    // code note'un asıl metni (şifre), başta kaydediyoruz
+    private string finalCodeText;
+
     // sırayla değişecek renkler
     private Color[] colors = new Color[]
     {
@@ -36,11 +42,19 @@ public class ColorChanger : MonoBehaviour
     // ipucu yazısı, şifre çıkınca gizlenecek
     public GameObject hintNote;
 
+    // şifreyi aktifleştirmek için keypad'e erişiyoruz
+    public KeypadController keypadController;
+
     void Start()
     {
         targetRenderer = GetComponent<MeshRenderer>();
         // oyun başında ilk renge ayarla
         targetRenderer.material.color = colors[currentIndex];
+
+        // code note'un text bileşenini bul ve asıl metni kaydet
+        codeNoteText = codeNote.GetComponent<TMP_Text>();
+        if (codeNoteText != null)
+            finalCodeText = codeNoteText.text;
     }
 
     void OnMouseDown()
@@ -51,8 +65,11 @@ public class ColorChanger : MonoBehaviour
             StopCoroutine(waitCoroutine);
             waitCoroutine = null;
 
-            if (statusText != null)
-                statusText.text = "";
+            // code note'u tekrar gizle, animasyon yarıda kaldı
+            codeNote.SetActive(false);
+
+            if (hintNote != null)
+            hintNote.SetActive(true);
         }
 
         // bir sonraki renge geç ve sona gelince başa dön
@@ -68,22 +85,36 @@ public class ColorChanger : MonoBehaviour
 
     private IEnumerator ShowCodeAfterDelay()
     {
-        // ekranda mesaj göster
-        if (statusText != null)
-            statusText.text = "Counting to 3...";
-
-        // 3 saniye bekle
-        yield return new WaitForSeconds(3f);
-
-        // şifreyi göster, topu yok et
-        if (statusText != null)
-            statusText.text = "";
-
+        // code note'u hemen göster ama önce yükleniyor animasyonu
         codeNote.SetActive(true);
 
         // ipucu yazısını gizle
         if (hintNote != null)
-            hintNote.SetActive(false);
+        hintNote.SetActive(false);
+
+        // 3 saniye boyunca nokta animasyonu oynat
+        string[] dots = { ".", ". .", ". . ." };
+        float elapsed = 0f;
+        int dotIndex = 0;
+
+        while (elapsed < 3f)
+        {
+            // sıradaki nokta desenini göster
+            if (codeNoteText != null)
+                codeNoteText.text = dots[dotIndex % 3];
+
+            dotIndex++;
+            yield return new WaitForSeconds(0.75f);
+            elapsed += 0.75f;
+        }
+
+        // animasyon bitti, asıl şifreyi yaz
+        if (codeNoteText != null)
+            codeNoteText.text = finalCodeText;
+
+        // artık keypad kullanılabilir
+        keypadController.isCodeRevealed = true;
+
 
         gameObject.SetActive(false);
     }

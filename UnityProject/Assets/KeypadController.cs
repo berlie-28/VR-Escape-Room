@@ -25,6 +25,9 @@ public class KeypadController : MonoBehaviour
     // bastıkça sayıları gösteren ekran
     public TMP_Text displayText;
 
+    // renk bulmacası çözüldükten sonra true oluyor
+    [HideInInspector] public bool isCodeRevealed = false;
+
     void Start()
     {
         // açılışta orijinal rengi kaydet
@@ -39,6 +42,9 @@ public class KeypadController : MonoBehaviour
     // sayıyı ekleme yeri
     public void AddDigit(string digit)
     {
+         // şifre henüz alınmadıysa butona basmak işe yaramasın
+        if (!isCodeRevealed) return;
+
         // yeni sayıyı sona ekle
         currentInput += digit;
 

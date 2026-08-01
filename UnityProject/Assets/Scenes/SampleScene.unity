@@ -268,6 +268,7 @@ MonoBehaviour:
   codeNote: {fileID: 2045313537}
   statusText: {fileID: 0}
   hintNote: {fileID: 783881726}
+  keypadController: {fileID: 1757265659}
 --- !u!114 &63249785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4555,6 +4556,7 @@ MonoBehaviour:
   doorControl: {fileID: 515337776}
   panelRenderer: {fileID: 1757265660}
   displayText: {fileID: 288975564}
+  isCodeRevealed: 0
 --- !u!23 &1757265660
 MeshRenderer:
   m_ObjectHideFlags: 0

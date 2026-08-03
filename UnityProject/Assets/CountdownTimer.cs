@@ -60,5 +60,19 @@ public class CountdownTimer : MonoBehaviour
         // süre bitti yazısını göster
         if (timeUpText != null)
             timeUpText.SetActive(true);
+
+    }  
+
+    // dışarıdan sayacı durdurmak için
+    public void StopTimer()
+    {
+        timerRunning = false;
     }
-}
+
+    // dışarıdan kalan süreyi okumak için
+    public float GetRemainingTime()
+    {
+        return timeRemaining;
+    }
+
+} 

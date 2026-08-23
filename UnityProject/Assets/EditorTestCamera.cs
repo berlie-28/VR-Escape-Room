@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class EditorTestCamera : MonoBehaviour
@@ -43,8 +44,8 @@ public class EditorTestCamera : MonoBehaviour
             transform.localRotation = Quaternion.Euler(rotX, rotY, 0);
         }
 
-        // Sol tık ile ekrana tıklayınca objeleri algılama
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        // tıklama bir UI elemanının (buton vs.) üzerindeyse 3D dünyaya ışın gönderme
+        if (Mouse.current.leftButton.wasPressedThisFrame && !EventSystem.current.IsPointerOverGameObject())
         {
             // Tıkladığım mouse koordinatından ileriye doğru ışın gönderiyorum
             Ray ray = GetComponent<Camera>().ScreenPointToRay(Mouse.current.position.ReadValue());

@@ -7,6 +7,9 @@ public class KeyDrag : MonoBehaviour
 
     private Rigidbody rb;
 
+    public AudioSource audioSource;
+    public AudioClip pickupSound;
+
     // anahtar elimizde mi değil mi
     private bool isHolding = false;
 
@@ -27,6 +30,8 @@ public class KeyDrag : MonoBehaviour
         {
             // anahtarı al: fiziği durdur, mesafeyi kaydet
             isHolding = true;
+            if (audioSource != null && pickupSound != null)
+                audioSource.PlayOneShot(pickupSound);
             rb.isKinematic = true;
             holdDistance = Mathf.Min(Vector3.Distance(testCamera.transform.position, transform.position), 1.5f);
 

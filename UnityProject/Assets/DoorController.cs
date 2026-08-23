@@ -1,9 +1,13 @@
 using UnityEngine;
 using System.Collections;
 
+
 public class DoorController : MonoBehaviour
 {
-    // kapının ana gövdesine ihtiyacı var
+    public AudioSource audioSource;
+    public AudioClip doorOpenSound;
+
+// kapının ana gövdesine ihtiyacı var
     public GameObject doorObject;
     public float openHeight = 3.5f;   // kapının yukarı kaç metre kayacağı
     public float openDuration = 1.5f; // kaç saniyede açılacağı
@@ -33,6 +37,9 @@ public class DoorController : MonoBehaviour
 
     private IEnumerator OpenTheDoor()
     {
+        if (audioSource != null && doorOpenSound != null)
+            audioSource.PlayOneShot(doorOpenSound);
+
         // başlangıç ve hedef pozisyonunu kaydet
         Vector3 startPos = doorObject.transform.position;
         Vector3 targetPos = startPos + new Vector3(0, openHeight, 0);

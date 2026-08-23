@@ -3,6 +3,8 @@ using TMPro;
 
 public class WinCondition : MonoBehaviour
 {
+    public AudioSource audioSource;
+    public AudioClip winSound;
     // kazanma yazısı
     public TMP_Text winText;
 
@@ -25,6 +27,8 @@ public class WinCondition : MonoBehaviour
             // kazanma yazısını göster
             winText.gameObject.SetActive(true);
             winText.text = string.Format("You Escaped!\nTime: {0:00}:{1:00}", minutes, seconds);
+            if (audioSource != null && winSound != null)
+                audioSource.PlayOneShot(winSound);
         }
     }
 }

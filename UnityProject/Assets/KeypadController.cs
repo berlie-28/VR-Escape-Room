@@ -2,9 +2,15 @@ using UnityEngine;
 using System.Collections;
 using TMPro;
 
+
+
 public class KeypadController : MonoBehaviour
 {
-    // açma şifresi
+    // doğru/yanlış şifre sesleri
+    public AudioSource audioSource;
+    public AudioClip correctSound;
+    public AudioClip wrongSound;// açma şifresi
+    
     public string correctPassword = "132";
 
     // basılan tuşları burada tutuyoz
@@ -78,12 +84,18 @@ public class KeypadController : MonoBehaviour
             if (doorControl != null)
                 doorControl.isSafeOpened = true;
 
+            if (audioSource != null && correctSound != null)
+                audioSource.PlayOneShot(correctSound);
+
             // paneli yeşil yak
             StartCoroutine(FlashColor(Color.green));
         }
         else
         {
             Debug.Log("YANLIŞ ŞİFRE!");
+
+            if (audioSource != null && wrongSound != null)
+                audioSource.PlayOneShot(wrongSound);
 
             // paneli kırmızı yak
             StartCoroutine(FlashColor(Color.red));

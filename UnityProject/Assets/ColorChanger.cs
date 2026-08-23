@@ -4,6 +4,9 @@ using TMPro;
 
 public class ColorChanger : MonoBehaviour
 {
+    public AudioSource audioSource;
+    public AudioClip clickSound;
+    public AudioClip revealSound;
     private MeshRenderer targetRenderer;
 
     // code note'un text bileşeni, animasyon için lazım
@@ -59,6 +62,9 @@ public class ColorChanger : MonoBehaviour
 
     void OnMouseDown()
     {
+        if (audioSource != null && clickSound != null)
+            audioSource.PlayOneShot(clickSound);
+
         // bekleme varsa iptal et çünkü maviyi geçti
         if (waitCoroutine != null)
         {
@@ -112,10 +118,16 @@ public class ColorChanger : MonoBehaviour
         if (codeNoteText != null)
             codeNoteText.text = finalCodeText;
 
+        // yazı gerçekten ekrana gelince ses çal
+        if (audioSource != null && revealSound != null)
+            audioSource.PlayOneShot(revealSound);
+
         // artık keypad kullanılabilir
         keypadController.isCodeRevealed = true;
 
 
-        gameObject.SetActive(false);
+        // topu tamamen kapatmak yerine sadece görünmez/tıklanamaz yap, ses kesilmesin
+        GetComponent<MeshRenderer>().enabled = false;
+        GetComponent<Collider>().enabled = false;
     }
 }

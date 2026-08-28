@@ -1539,6 +1539,7 @@ GameObject:
   - component: {fileID: 207867118}
   - component: {fileID: 207867124}
   - component: {fileID: 207867123}
+  - component: {fileID: 207867125}
   m_Layer: 0
   m_Name: Editor_Test_Camera
   m_TagString: Player
@@ -1560,6 +1561,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EditorTestCamera
   moveSpeed: 4
   mouseSensitivity: 0.15
+  gravity: -9.81
 --- !u!114 &207867119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1672,7 +1674,7 @@ Transform:
   m_GameObject: {fileID: 207867117}
   serializedVersion: 2
   m_LocalRotation: {x: 0.06162845, y: -0.70441604, z: 0.06162845, w: 0.70441604}
-  m_LocalPosition: {x: 6, y: 1.2, z: -2}
+  m_LocalPosition: {x: 6, y: 1.7, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1726,6 +1728,31 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.3
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!143 &207867125
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 207867117}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 1.8
+  m_Radius: 0.25
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.03
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: -0.4, z: 0}
 --- !u!1 &224143297
 GameObject:
   m_ObjectHideFlags: 0
@@ -5168,8 +5195,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KeyDrag
   testCamera: {fileID: 207867121}
-  audioSource: {fileID: 1153129249}
-  pickupSound: {fileID: 8300000, guid: a112afcc251ac4453bd1f6978a206cb8, type: 3}
 --- !u!82 &1153129249
 AudioSource:
   m_ObjectHideFlags: 0

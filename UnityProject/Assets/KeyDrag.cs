@@ -19,6 +19,10 @@ public class KeyDrag : MonoBehaviour
     // aldığımız frame'de bırakma sorununu önlemek için
     private bool justPickedUp = false;
 
+    // anahtarı alınca çalacak ses
+    public AudioSource audioSource;
+    public AudioClip pickupSound;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -32,6 +36,9 @@ public class KeyDrag : MonoBehaviour
             // anahtarı al: fiziği durdur, mesafeyi kaydet
             isHolding = true;
             rb.isKinematic = true;
+
+            if (audioSource != null && pickupSound != null)
+                audioSource.PlayOneShot(pickupSound);
 
             // tutarken collider'ı trigger yap: fiziksel olarak itmesin ama kilide değince hâlâ algılansın
             if (col != null) col.isTrigger = true;

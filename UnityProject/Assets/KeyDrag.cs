@@ -27,6 +27,10 @@ public class KeyDrag : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
+
+        // baştan kinematic: destek objesi (ör. Safe_Front) yok olsa bile
+        // yerçekimiyle düşüp kaybolmasın, sadece elle alınca hareket etsin
+        rb.isKinematic = true;
     }
 
     void OnMouseDown()

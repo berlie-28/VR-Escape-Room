@@ -9,52 +9,52 @@ public class ColorChanger : MonoBehaviour
     public AudioClip revealSound;
     private MeshRenderer targetRenderer;
 
-    // code note'un text bileşeni, animasyon için lazım
+    // text component of the code note, used for the animation
     private TMP_Text codeNoteText;
 
-    // code note'un asıl metni (şifre), başta kaydediyoruz
+    // the actual code note text, saved at the start
     private string finalCodeText;
 
-    // sırayla değişecek renkler
+    // colors it cycles through
     private Color[] colors = new Color[]
     {
         Color.red,
-        new Color(1f, 0.5f, 0f),    // turuncu
+        new Color(1f, 0.5f, 0f),    // orange
         Color.yellow,
         Color.green,
-        new Color(0.5f, 0f, 0.5f),  // mor
+        new Color(0.5f, 0f, 0.5f),  // purple
         Color.white,
-        Color.blue                   // hedef renk
+        Color.blue                   // target color
     };
 
-    // şu anki renk indexi
+    // current color index
     private int currentIndex = 0;
 
-    // mavinin indexi 
+    // index of blue
     private int correctIndex = 6;
 
-    // 3 saniyelik beklemeyi saklıyoruz
+    // reference to the 3 second wait coroutine
     private Coroutine waitCoroutine;
 
-    // 3 saniye beklerkenki mesaj
+    // message shown while waiting the 3 seconds
     public GameObject codeNote;
 
-    // baştaki mesaj
+    // the message at the start
     public TMP_Text statusText;
 
-    // ipucu yazısı, şifre çıkınca gizlenecek
+    // hint text, gets hidden once the code shows up
     public GameObject hintNote;
 
-    // şifreyi aktifleştirmek için keypad'e erişiyoruz
+    // reference to the keypad to unlock it once code is revealed
     public KeypadController keypadController;
 
     void Start()
     {
         targetRenderer = GetComponent<MeshRenderer>();
-        // oyun başında ilk renge ayarla
+        // set it to the first color at the start
         targetRenderer.material.color = colors[currentIndex];
 
-        // code note'un text bileşenini bul ve asıl metni kaydet
+        // find the code note's text component and save the real text
         codeNoteText = codeNote.GetComponent<TMP_Text>();
         if (codeNoteText != null)
             finalCodeText = codeNoteText.text;
@@ -65,24 +65,24 @@ public class ColorChanger : MonoBehaviour
         if (audioSource != null && clickSound != null)
             audioSource.PlayOneShot(clickSound);
 
-        // bekleme varsa iptal et çünkü maviyi geçti
+        // cancel the wait if it's running, since we just clicked past blue
         if (waitCoroutine != null)
         {
             StopCoroutine(waitCoroutine);
             waitCoroutine = null;
 
-            // code note'u tekrar gizle, animasyon yarıda kaldı
+            // hide the code note again, animation got interrupted
             codeNote.SetActive(false);
 
             if (hintNote != null)
             hintNote.SetActive(true);
         }
 
-        // bir sonraki renge geç ve sona gelince başa dön
+        // move to the next color, loop back to the start when it reaches the end
         currentIndex = (currentIndex + 1) % colors.Length;
         targetRenderer.material.color = colors[currentIndex];
 
-        // doğru renge geldi mi diye bakıyoruz
+        // check if we landed on the correct color
         if (currentIndex == correctIndex)
         {
             waitCoroutine = StartCoroutine(ShowCodeAfterDelay());
@@ -91,21 +91,21 @@ public class ColorChanger : MonoBehaviour
 
     private IEnumerator ShowCodeAfterDelay()
     {
-        // code note'u hemen göster ama önce yükleniyor animasyonu
+        // show the code note right away, but with a loading animation first
         codeNote.SetActive(true);
 
-        // ipucu yazısını gizle
+        // hide the hint text
         if (hintNote != null)
         hintNote.SetActive(false);
 
-        // 3 saniye boyunca nokta animasyonu oynat
+        // play the dots animation for 3 seconds
         string[] dots = { ".", ". .", ". . ." };
         float elapsed = 0f;
         int dotIndex = 0;
 
         while (elapsed < 3f)
         {
-            // sıradaki nokta desenini göster
+            // show the next dot pattern
             if (codeNoteText != null)
                 codeNoteText.text = dots[dotIndex % 3];
 
@@ -114,19 +114,19 @@ public class ColorChanger : MonoBehaviour
             elapsed += 0.75f;
         }
 
-        // animasyon bitti, asıl şifreyi yaz
+        // animation is done, write the real code
         if (codeNoteText != null)
             codeNoteText.text = finalCodeText;
 
-        // yazı gerçekten ekrana gelince ses çal
+        // play the sound once the text actually shows up
         if (audioSource != null && revealSound != null)
             audioSource.PlayOneShot(revealSound);
 
-        // artık keypad kullanılabilir
+        // keypad can be used now
         keypadController.isCodeRevealed = true;
 
 
-        // topu tamamen kapatmak yerine sadece görünmez/tıklanamaz yap, ses kesilmesin
+        // instead of fully disabling the ball, just make it invisible so audio doesn't cut off
         GetComponent<MeshRenderer>().enabled = false;
         GetComponent<Collider>().enabled = false;
     }

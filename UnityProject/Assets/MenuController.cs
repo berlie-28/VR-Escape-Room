@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
-    // Butona tıklandığında sahneyi yeniden yükler
+    // reloads the scene when the button is clicked
     public void RestartGame()
     {
         string currentScene = SceneManager.GetActiveScene().name;

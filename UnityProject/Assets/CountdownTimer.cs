@@ -3,24 +3,24 @@ using TMPro;
 
 public class CountdownTimer : MonoBehaviour
 {
-    // başlangıç süresi saniye cinsinden (180 = 3 dakika)
+    // starting time in seconds (180 = 3 minutes)
     public float totalTime = 180f;
 
-    // sayacı gösteren yazı
+    // text showing the timer
     public TMP_Text timerText;
 
-    // süre bitince çıkan yazı
+    // text that shows up when time runs out
     public GameObject timeUpText;
 
-    // kalan süre
+    // time left
     private float timeRemaining;
 
-    // sayaç duruyor mu
+    // is the timer still running
     private bool timerRunning = true;
 
     void Start()
     {
-        // başlangıçta toplam süreyi ver
+        // set the remaining time to the total at the start
         timeRemaining = totalTime;
     }
 
@@ -28,10 +28,10 @@ public class CountdownTimer : MonoBehaviour
     {
         if (!timerRunning) return;
 
-        // kalan süreden geçen zamanı çıkar
+        // subtract the time that passed from the remaining time
         timeRemaining -= Time.deltaTime;
 
-        // sıfırın altına düşmesin diye
+        // don't let it go below zero
         if (timeRemaining <= 0)
         {
             timeRemaining = 0;
@@ -39,13 +39,13 @@ public class CountdownTimer : MonoBehaviour
             TimerEnded();
         }
 
-        // ekrana yaz
+        // update the text on screen
         UpdateTimerDisplay();
     }
 
     void UpdateTimerDisplay()
     {
-        // saniyeyi dakika ve saniyeye çevir
+        // convert seconds into minutes and seconds
         int minutes = Mathf.FloorToInt(timeRemaining / 60);
         int seconds = Mathf.FloorToInt(timeRemaining % 60);
 
@@ -54,22 +54,22 @@ public class CountdownTimer : MonoBehaviour
 
     void TimerEnded()
     {
-        // sayacı sıfır göster
+        // show the timer as zero
         timerText.text = "00:00";
 
-        // süre bitti yazısını göster
+        // show the "time's up" text
         if (timeUpText != null)
             timeUpText.SetActive(true);
 
-    }  
+    }
 
-    // dışarıdan sayacı durdurmak için
+    // lets other scripts stop the timer
     public void StopTimer()
     {
         timerRunning = false;
     }
 
-    // dışarıdan kalan süreyi okumak için
+    // lets other scripts read the remaining time
     public float GetRemainingTime()
     {
         return timeRemaining;

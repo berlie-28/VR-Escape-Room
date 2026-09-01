@@ -3,22 +3,22 @@ using TMPro;
 
 public class WinCondition : MonoBehaviour
 {
-    // kazanma yazısı
+    // win text
     public TMP_Text winText;
 
-    // kalan süreyi almak için sayaca erişiyoruz
+    // reference to the timer to get the remaining time
     public CountdownTimer countdownTimer;
 
-    // kazanma sesi
+    // win sound
     public AudioSource audioSource;
     public AudioClip winSound;
 
-    // bir kere kazanınca tekrar tetiklenmesin
+    // stops this from triggering again after winning once
     private bool hasWon = false;
 
     private void OnTriggerEnter(Collider other)
     {
-        // kapıdan geçen oyuncu muydu?
+        // was it the player that went through the door?
         if (other.CompareTag("Player") && !hasWon)
         {
             hasWon = true;
@@ -26,15 +26,15 @@ public class WinCondition : MonoBehaviour
             if (audioSource != null && winSound != null)
                 audioSource.PlayOneShot(winSound);
 
-            // sayacı durdur
+            // stop the timer
             countdownTimer.StopTimer();
 
-            // kalan süreyi dakika:saniye formatına çevir
+            // convert the remaining time into minutes:seconds
             float remaining = countdownTimer.GetRemainingTime();
             int minutes = Mathf.FloorToInt(remaining / 60);
             int seconds = Mathf.FloorToInt(remaining % 60);
 
-            // kazanma yazısını göster
+            // show the win text
             winText.gameObject.SetActive(true);
             winText.text = string.Format("You Escaped!\nTime: {0:00}:{1:00}", minutes, seconds);
         }

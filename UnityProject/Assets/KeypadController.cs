@@ -6,68 +6,68 @@ using TMPro;
 
 public class KeypadController : MonoBehaviour
 {
-    // doğru/yanlış şifre sesleri
+    // correct/wrong password sounds
     public AudioSource audioSource;
     public AudioClip correctSound;
-    public AudioClip wrongSound;// açma şifresi
-    
+    public AudioClip wrongSound;// the safe password
+
     public string correctPassword = "132";
 
-    // basılan tuşları burada tutuyoz
+    // keeps track of the digits pressed so far
     private string currentInput = "";
 
-    // açılacak olan kapak
+    // the lid that opens
     public GameObject safeLid;
 
-    // kapı koduna erişmek için buraya ekledik
+    // reference to reach the door's code
     public DoorController doorControl;
 
-    // renk değişimi için 
+    // for changing the panel color
     public MeshRenderer panelRenderer;
 
-    // panelin başlangıç rengini saklıyoruz
+    // saves the panel's starting color
     private Color originalColor;
 
-    // bastıkça sayıları gösteren ekran
+    // screen that shows the digits as you press them
     public TMP_Text displayText;
 
-    // renk bulmacası çözüldükten sonra true oluyor
+    // becomes true once the color puzzle is solved
     [HideInInspector] public bool isCodeRevealed = false;
 
     void Start()
     {
-        // açılışta orijinal rengi kaydet
+        // save the original color at the start
         if (panelRenderer != null)
             originalColor = panelRenderer.material.color;
 
-        // ekranı başta boş göster
+        // keep the display empty at the start
         if (displayText != null)
             displayText.text = "";
     }
 
-    // sayıyı ekleme yeri
+    // called when a digit gets added
     public void AddDigit(string digit)
     {
-         // şifre henüz alınmadıysa butona basmak işe yaramasın
+         // pressing buttons shouldn't do anything before the code is revealed
         if (!isCodeRevealed) return;
 
-        // yeni sayıyı sona ekle
+        // add the new digit at the end
         currentInput += digit;
 
-        // ekranda göster
+        // show it on the display
         if (displayText != null)
             displayText.text = currentInput;
 
-        Debug.Log("Şu anki durum: " + currentInput);
+        Debug.Log("Current input: " + currentInput);
 
-        // 3 basamak olduysa kontrol et
+        // check the password once we have 3 digits
         if (currentInput.Length >= 3)
         {
             StartCoroutine(CheckPasswordWithDelay());
         }
     }
 
-    // son sayıyı ekranda göster, biraz bekle sonra kontrol et
+    // show the last digit on screen, wait a bit, then check the password
     private IEnumerator CheckPasswordWithDelay()
     {
         yield return new WaitForSeconds(0.4f);
@@ -78,7 +78,7 @@ public class KeypadController : MonoBehaviour
     {
         if (currentInput == correctPassword)
         {
-            Debug.Log("ŞİFRE DOĞRU!");
+            Debug.Log("CORRECT PASSWORD!");
             safeLid.SetActive(false);
 
             if (doorControl != null)
@@ -87,32 +87,32 @@ public class KeypadController : MonoBehaviour
             if (audioSource != null && correctSound != null)
                 audioSource.PlayOneShot(correctSound);
 
-            // paneli yeşil yak
+            // flash the panel green
             StartCoroutine(FlashColor(Color.green));
         }
         else
         {
-            Debug.Log("YANLIŞ ŞİFRE!");
+            Debug.Log("WRONG PASSWORD!");
 
             if (audioSource != null && wrongSound != null)
                 audioSource.PlayOneShot(wrongSound);
 
-            // paneli kırmızı yak
+            // flash the panel red
             StartCoroutine(FlashColor(Color.red));
         }
 
-        // ekranı ve girişi sıfırla
+        // reset the display and input
         currentInput = "";
         if (displayText != null)
             displayText.text = "";
     }
 
-    // paneli verilen renge boyayıp sonra orijinaline döndür
+    // flash the panel to a color then go back to the original one
     private IEnumerator FlashColor(Color flashColor)
     {
         panelRenderer.material.color = flashColor;
 
-        // 0.5 saniye bekle
+        // wait half a second
         yield return new WaitForSeconds(0.5f);
 
         panelRenderer.material.color = originalColor;

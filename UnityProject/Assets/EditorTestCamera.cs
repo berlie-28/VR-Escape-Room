@@ -23,7 +23,7 @@ public class EditorTestCamera : MonoBehaviour
 
     void Update()
     {
-        // WASD yürüme kısmı
+        // WASD movement
         Vector3 moveDirection = Vector3.zero;
         if (Keyboard.current.wKey.isPressed) moveDirection += transform.forward;
         if (Keyboard.current.sKey.isPressed) moveDirection -= transform.forward;
@@ -33,7 +33,7 @@ public class EditorTestCamera : MonoBehaviour
         moveDirection.y = 0;
         moveDirection = moveDirection.normalized * moveSpeed;
 
-        // yere basılıyken düşme hızını sıfırla, havadaysa yerçekimi uygula
+        // reset fall speed when on the ground, apply gravity when in the air
         if (controller.isGrounded)
             verticalVelocity = -1f;
         else
@@ -41,10 +41,10 @@ public class EditorTestCamera : MonoBehaviour
 
         moveDirection.y = verticalVelocity;
 
-        // duvarlara çarpmayı hallediyor
+        // CharacterController takes care of wall collisions
         controller.Move(moveDirection * Time.deltaTime);
 
-        // Sağ tık basılıyken mouse hareketine göre etrafa bakma
+        // look around with the mouse while holding right click
         if (Mouse.current.rightButton.isPressed)
         {
             Vector2 mouseDelta = Mouse.current.delta.ReadValue();
@@ -56,16 +56,16 @@ public class EditorTestCamera : MonoBehaviour
             transform.localRotation = Quaternion.Euler(rotX, rotY, 0);
         }
 
-        // tıklama bir UI elemanının üzerindeyse 3D dünyaya ışın gönderme
+        // don't raycast into the 3D world if we clicked on a UI element
         if (Mouse.current.leftButton.wasPressedThisFrame && !EventSystem.current.IsPointerOverGameObject())
         {
-            // Tıkladığım mouse koordinatından ileriye doğru ışın gönderiyorum
+            // shoot a ray forward from where the mouse clicked
             Ray ray = GetComponent<Camera>().ScreenPointToRay(Mouse.current.position.ReadValue());
 
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                Debug.Log("Lazer şuna çarptı: " + hit.transform.name);
-                // Çarptığım şey şifre butonu mu?
+                Debug.Log("Ray hit: " + hit.transform.name);
+                // check if we hit a keypad button
                 KeypadButton button = hit.transform.GetComponent<KeypadButton>();
                 if (button != null)
                 {

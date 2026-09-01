@@ -3,26 +3,26 @@ using TMPro;
 
 public class NoteReaderUI : MonoBehaviour
 {
-    // metnin göründüğü panel (arka plan kutusu)
+    // panel where the text shows up (background box)
     public GameObject panel;
 
-    // notun yazısının basıldığı text alanı
+    // text field where the note's text goes
     public TMP_Text noteDisplayText;
 
     void Start()
     {
-        // oyun başında panel kapalı olsun
+        // keep the panel closed at the start
         panel.SetActive(false);
     }
 
-    // bir not tıklanınca çağrılacak, metni gösterir
+    // gets called when a note is clicked, shows the text
     public void Show(string text)
     {
         panel.SetActive(true);
         noteDisplayText.text = text;
     }
 
-    // kapat butonuna basınca çağrılacak
+    // gets called when the close button is pressed
     public void Hide()
     {
         panel.SetActive(false);

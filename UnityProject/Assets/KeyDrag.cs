@@ -2,24 +2,24 @@ using UnityEngine;
 
 public class KeyDrag : MonoBehaviour
 {
-    // kamerayı elle bağlıyoruz
+    // drag the camera in manually
     public Camera testCamera;
 
     private Rigidbody rb;
 
-    // anahtarın collider'ı, tutarken trigger'a çevirip oyuncuya çarpmasını engelliyoruz
+    // key's collider, turn it into a trigger while holding so it doesn't push the player
     private Collider col;
 
-    // anahtar elimizde mi değil mi
+    // are we currently holding the key
     private bool isHolding = false;
 
-    // tutarken kameraya olan derinlik mesafesi
+    // how far the key should stay from the camera while held
     private float holdDistance;
 
-    // aldığımız frame'de bırakma sorununu önlemek için
+    // stops the key from getting dropped on the same frame it was picked up
     private bool justPickedUp = false;
 
-    // anahtarı alınca çalacak ses
+    // sound for picking up the key
     public AudioSource audioSource;
     public AudioClip pickupSound;
 
@@ -28,8 +28,8 @@ public class KeyDrag : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
 
-        // baştan kinematic: destek objesi (ör. Safe_Front) yok olsa bile
-        // yerçekimiyle düşüp kaybolmasın, sadece elle alınca hareket etsin
+        // kinematic from the start so if a nearby object (like Safe_Front) gets
+        // disabled, the key doesn't fall through the floor from gravity
         rb.isKinematic = true;
     }
 
@@ -37,19 +37,19 @@ public class KeyDrag : MonoBehaviour
     {
         if (!isHolding)
         {
-            // anahtarı al: fiziği durdur, mesafeyi kaydet
+            // pick up the key: stop physics, save the distance
             isHolding = true;
             rb.isKinematic = true;
 
             if (audioSource != null && pickupSound != null)
                 audioSource.PlayOneShot(pickupSound);
 
-            // tutarken collider'ı trigger yap: fiziksel olarak itmesin ama kilide değince hâlâ algılansın
+            // make the collider a trigger while holding so it doesn't push stuff, but still gets detected by the lock
             if (col != null) col.isTrigger = true;
 
             holdDistance = Mathf.Min(Vector3.Distance(testCamera.transform.position, transform.position), 1.5f);
 
-            // bu frame'de bırakmayı engelle
+            // don't let it get dropped on this same frame
             justPickedUp = true;
         }
     }
@@ -58,14 +58,14 @@ public class KeyDrag : MonoBehaviour
     {
         if (!isHolding) return;
 
-        // aldığımız frame'de bırakma kontrolünü atla
+        // skip the drop check on the frame we just picked it up
         if (justPickedUp)
         {
             justPickedUp = false;
             return;
         }
 
-        // sol tıkla bırak
+        // left click to drop
         if (Input.GetMouseButtonDown(0))
         {
             isHolding = false;
@@ -77,11 +77,11 @@ public class KeyDrag : MonoBehaviour
         Ray ray = testCamera.ScreenPointToRay(Input.mousePosition);
         Vector3 newPos = ray.GetPoint(holdDistance);
 
-        // anahtarı sağa ve aşağıya kaydır, daha doğal görünsün
+        // offset the key a bit right and down so it looks more natural
         newPos += testCamera.transform.right * 0.1f;
         newPos -= testCamera.transform.up * 0.2f;
 
-        // aradaki yönde duvar/kapı varsa anahtarı onun önünde durdur (kendi gövdesine çarpmasını yok say)
+        // if there's a wall/door in the way, stop the key in front of it (ignore its own body)
         Vector3 dir = newPos - testCamera.transform.position;
         float dist = dir.magnitude;
         if (Physics.Raycast(testCamera.transform.position, dir.normalized, out RaycastHit hit, dist, ~0, QueryTriggerInteraction.Ignore)

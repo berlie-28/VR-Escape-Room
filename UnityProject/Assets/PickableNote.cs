@@ -5,11 +5,11 @@ public class PickableNote : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip pickupSound;
 
-    // bu notun içeriği, Inspector'dan her not için farklı yazılacak
+    // this note's content, gets set differently for each note in the Inspector
     [TextArea(3, 6)]
-    public string noteText = "Buraya notun metnini yaz...";
+    public string noteText = "Write the note's text here...";
 
-    // sahnedeki tek NoteReaderUI'ye referans
+    // reference to the one NoteReaderUI in the scene
     public NoteReaderUI reader;
 
     void OnMouseDown()
@@ -19,7 +19,7 @@ public class PickableNote : MonoBehaviour
 
         reader.Show(noteText);
 
-        // not okundu, artık görünmesin ve tekrar tıklanamasın
+        // note has been read, hide it and stop it from being clicked again
         GetComponent<MeshRenderer>().enabled = false;
         GetComponent<Collider>().enabled = false;
     }

@@ -7,31 +7,31 @@ public class DoorController : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip doorOpenSound;
 
-// kapının ana gövdesine ihtiyacı var
+// needs a reference to the door's main body
     public GameObject doorObject;
-    public float openHeight = 3.5f;   // kapının yukarı kaç metre kayacağı
-    public float openDuration = 1.5f; // kaç saniyede açılacağı
+    public float openHeight = 3.5f;   // how many meters the door slides up
+    public float openDuration = 1.5f; // how long it takes to open
 
-    // kapının durumunu hafızada tutan değişken
+    // keeps track of whether the door is open
     private bool isDoorOpened = false;
 
-    // kasanın açılıp açılmadığını buradan takip ediyorum
+    // tracks whether the safe has been opened
     [HideInInspector] public bool isSafeOpened = false;
 
-    // Unity hazır fizik sensör fonksiyonu
+    // Unity's built-in trigger function
     private void OnTriggerEnter(Collider other)
     {
-        // hem tag "Key" olacak, hem kapı açılmamış olacak, hem de şifre doğru girilmiş olacak
+        // needs to be tagged "Key", door not open yet, and the code already entered
         if (other.CompareTag("Key") && !isDoorOpened && isSafeOpened)
         {
             isDoorOpened = true;
-            // animasyonu başlat
+            // start the open animation
             StartCoroutine(OpenTheDoor());
         }
-        // şifreyi girmeden anahtarı kapıya değdirirlerse uyar
+        // warn if the key touches the door before the code is entered
         else if (other.CompareTag("Key") && !isSafeOpened)
         {
-            Debug.Log("Kasa açılmadan bu kilit/anahtar çalışmaz!");
+            Debug.Log("This lock doesn't work until the safe is opened!");
         }
     }
 
@@ -40,33 +40,33 @@ public class DoorController : MonoBehaviour
         if (audioSource != null && doorOpenSound != null)
             audioSource.PlayOneShot(doorOpenSound);
 
-        // başlangıç ve hedef pozisyonunu kaydet
+        // save the start and target position
         Vector3 startPos = doorObject.transform.position;
         Vector3 targetPos = startPos + new Vector3(0, openHeight, 0);
 
-        // ne kadar zaman geçtiğini tutan sayaç
+        // counts how much time has passed
         float elapsed = 0f;
 
         while (elapsed < openDuration)
         {
-            // her frame geçen süreyi ekle
+            // add the time passed this frame
             elapsed += Time.deltaTime;
 
-            // 0'dan 1'e giden ilerleme değeri
+            // progress value going from 0 to 1
             float t = elapsed / openDuration;
 
-            // kapı önce hızlı açılır, sona doğru yavaşlar
+            // door opens fast at first, then slows down near the end
             t = t * t * (3f - 2f * t);
 
-            // başlangıç ile hedef arasında o anki pozisyonu hesaplıyor
+            // calculate the current position between start and target
             doorObject.transform.position = Vector3.Lerp(startPos, targetPos, t);
 
-            // bir sonraki frame'e geç
+            // wait for the next frame
             yield return null;
         }
 
-        // tam olarak hedefe kilitle
+        // snap exactly to the target position
         doorObject.transform.position = targetPos;
-        Debug.Log("Sistem Doğrulandı: Kapı Açıldı!");
+        Debug.Log("System verified: door opened!");
     }
 }

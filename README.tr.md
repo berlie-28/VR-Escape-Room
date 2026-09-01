@@ -13,7 +13,7 @@ https://github.com/user-attachments/assets/1e3e0abc-7e60-4ec9-bdf3-099e69513c30
 Bu, VR geliştirmeye ilk adımım. Amacım sadece tutorial izlemek yerine gerçekten bir şey inşa ederek Unity'nin component sistemini, fizik/trigger etkileşimlerini ve XR Interaction Toolkit'i öğrenmekti.
 
 **Bulmaca akışı:**
-1. Renkli topa tekrar tekrar tıklayarak hedef renge gelene kadar renkleri değiştir, hedef renge gelince yakındaki bir nota şifre yazılır.
+1. Renkli topa tekrar tekrar tıklayarak hedef renge gelene kadar renkleri değiştir, hedef renge gelince topun arkasındaki duvarda bir şifre ortaya çıkar.
 2. Şifreyi keypad'e gir.
 3. Kasa açılır, içindeki anahtarı al.
 4. Anahtarı kapıya götürerek kilidini aç.

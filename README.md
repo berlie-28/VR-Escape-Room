@@ -13,7 +13,7 @@ https://github.com/user-attachments/assets/1e3e0abc-7e60-4ec9-bdf3-099e69513c30
 This is a first project into VR development. The goal was to learn Unity's component system, physics/trigger interactions, and the XR Interaction Toolkit by actually building something instead of just following tutorials.
 
 **Puzzle flow:**
-1. Click the colored ball repeatedly to cycle through colors until it lands on the target color, which reveals a code on a nearby note.
+1. Click the colored ball repeatedly to cycle through colors until it lands on the target color, which reveals a code on the wall behind it.
 2. Enter the code on the keypad.
 3. The safe opens, grab the key inside.
 4. Bring the key to the door to unlock and open it.
